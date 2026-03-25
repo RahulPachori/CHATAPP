@@ -28,35 +28,36 @@ export const getMessages = async (req, res) => {
    }
 };
 
-export const sendMesssage=async (req,res)=>{
+export const sendMessage = async (req, res) => {
    try {
-      const {text,image}=req.body;
-      const {id: receiverId}=req.params;
-      const senderId=req.user._id;
+      const { text, image } = req.body;
+      const { id: receiverId } = req.params;
+      const senderId = req.user._id;
 
-      let imageUrl;
-
-      if(image){
-         //unpload image to cloudinary
-         const result=await cloudinary.uploader.upload(image);
-         imageUrl=result.secure_url;
+      if (!text && !image) {
+         return res.status(400).json({ message: "Message cannot be empty" });
       }
 
-      const newMessage=new message({
+      let imageUrl = null;
+
+      if (image) {
+         const result = await cloudinary.uploader.upload(image);
+         imageUrl = result.secure_url;
+      }
+
+      const newMessage = new Message({
          senderId,
          receiverId,
          text,
-         image:imageUrl
+         image: imageUrl
       });
-      
-      await newMessage.save();
-      
-      //todo: real time functionality to send message by socket.io
 
-      return res.status(200).json(newMessage);
+      await newMessage.save();
+
+      return res.status(201).json(newMessage);
 
    } catch (error) {
-      console.log("Error in sendMesssage controller:", error.message);
+      console.log("Error in sendMessage controller:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
    }
-}  
+};
