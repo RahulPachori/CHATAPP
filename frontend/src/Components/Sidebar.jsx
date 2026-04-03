@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
-import { useAuthStore } from "../store/useAuthStore";
+
 import SidebarSkeleton from "./skeletons/sidebarSkeleton";
 import { Users } from "lucide-react";
+import { useAuthStore } from "../store/useAuthstore";
 
 const Sidebar = () => {
    const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
@@ -53,7 +54,7 @@ const Sidebar = () => {
                      ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
                   `}
                >
-                  <div>
+                  <div className="relative">
                      <img src={user.profilePic || "/avatar.png" } alt={user.name}
                         className="size-12 rounded-full object-cover" 
                      />
