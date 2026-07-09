@@ -16,7 +16,7 @@ const AuthImagePattern = ({ title, subtitle }) => {
                {/* RIGHT */}
                <div className="flex justify-end">
                   <div className="bg-primary text-primary-content px-5 py-3 rounded-2xl rounded-br-sm shadow-sm max-w-xs">
-                     Welcome to ChatSphere 💬
+                     Welcome to NexTalk 💬
                   </div>
                </div>
 

@@ -1,56 +1,67 @@
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { LogOut, MessageSquare, Settings, User } from "lucide-react";
+import { LogOut, MessageCircleMore, Palette } from "lucide-react";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
 
   return (
-    <header
-      className="bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 
-    backdrop-blur-lg bg-base-100/80"
-    >
-      <div className="container mx-auto px-4 h-16">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-base-100/90 backdrop-blur-xl border-b border-base-200 shadow-sm">
+      <div className="w-full h-[72px] px-8">
         <div className="flex items-center justify-between h-full">
-          <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-all">
-              <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                <MessageSquare className="w-5 h-5 text-primary" />
-              </div>
-              <h1 className="text-lg font-bold">Chatty</h1>
-            </Link>
-          </div>
+          <Link
+            to="/"
+            className="flex items-center gap-3 group"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
+              <MessageCircleMore className="w-8 h-8 text-white" strokeWidth={2.2} />
+            </div>
 
-          <div className="flex items-center gap-3">
+            <div className="flex flex-col leading-none">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                NexTalk
+              </h1>
+              <span className="text-xs text-base-content/50">
+                The Next Conversation
+              </span>
+            </div>
+          </Link>
+
+          <div className="flex items-center gap-4">
             <Link
               to="/settings"
-              className="btn btn-ghost btn-circle"
+              className="btn btn-ghost btn-circle hover:bg-base-200"
+              title="Themes"
             >
-              <Settings className="w-5 h-5" />
+              <Palette className="w-5 h-5" />
             </Link>
 
             {authUser && (
               <>
                 <Link
                   to="/profile"
-                  className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-base-200 transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-base-200 transition-all"
                 >
                   <img
-                    src={
-                      authUser.profilePic
-                        ? authUser.profilePic
-                        : "/avatar.png"
-                    }
+                    src={authUser.profilePic || "/avatar.png"}
                     alt="Profile"
-                    className="w-8 h-8 rounded-full object-cover border"
+                    className="w-10 h-10 rounded-full object-cover border-2 border-base-300"
                   />
 
-                  <span className="hidden sm:inline font-medium">
-                    {authUser.fullName}
-                  </span>
+                  <div className="hidden sm:flex flex-col">
+                    <span className="font-semibold leading-none">
+                      {authUser.fullName}
+                    </span>
+                    <span className="text-xs text-green-500">
+                      Online
+                    </span>
+                  </div>
                 </Link>
 
-                <button className="flex gap-2 items-center" onClick={logout}>
+                <button
+                  onClick={logout}
+                  className="btn btn-ghost rounded-xl gap-2 hover:bg-error hover:text-error-content transition-all"
+                >
                   <LogOut className="size-5" />
                   <span className="hidden sm:inline">Logout</span>
                 </button>
@@ -62,4 +73,5 @@ const Navbar = () => {
     </header>
   );
 };
+
 export default Navbar;
