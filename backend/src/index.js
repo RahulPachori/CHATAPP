@@ -15,8 +15,9 @@ app.use(express.urlencoded({ limit: "5mb", extended: true }));
 app.use("/profilepics", express.static("profilepics"));
 app.use(express.json());
 app.use(cookieParser());
+const CLIENT_URL = process.env.CLIENT_URL ;
 app.use(cors({
-   origin: "http://localhost:5173",
+   origin: CLIENT_URL ,
    credentials: true
 }));
 
