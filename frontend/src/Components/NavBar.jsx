@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { LogOut, MessageCircleMore, Palette } from "lucide-react";
 
-const Navbar = () => {
+const NavBar = () => {
   const { logout, authUser } = useAuthStore();
 
   return (
@@ -74,4 +74,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavBar;

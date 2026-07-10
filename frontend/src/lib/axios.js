@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-   baseURL:"http://localhost:5005/api",
+   baseURL:"https://nextalk-backend-qgg4.onrender.com/api",
    withCredentials: true,
 });
