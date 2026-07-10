@@ -24,8 +24,10 @@ app.use("/api/auth",authRoutes);
 app.use("/api/messages",messageRoutes);
 
 
-const PORT=process.env.PORT || 5001;
+const PORT=process.env.PORT || 5005;
 server.listen(PORT,()=>{
    console.log(`Server started on port ${PORT}`);
    connectDB();
 });
+
+
