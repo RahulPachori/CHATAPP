@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Navigate, Route,Routes } from "react-router-dom"
-import Navbar from "./Components/Navbar"
+import NavBar from "./Components/NavBar"
 import SettingsPage from "./Pages/SettingsPage"
 import ProfilePage from "./Pages/ProfilePage"
 import HomePage from "./Pages/HomePage"
@@ -30,7 +30,7 @@ function App() {
 
   return (
     <div data-theme={theme}>
-      <Navbar/>
+      <NavBar/>
 
       <Routes>
         <Route path="/" element={authUser?<HomePage/>:<Navigate to="/login"/>}/>
