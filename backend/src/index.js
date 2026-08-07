@@ -12,8 +12,7 @@ import { app,server } from "./lib/socket.js";
 
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ limit: "5mb", extended: true }));
-app.use("/profilepics", express.static("profilepics"));
-app.use(express.json());
+// app.use("/profilepics", express.static("profilepics"));
 app.use(cookieParser());
 const CLIENT_URL = process.env.CLIENT_URL ;
 app.use(cors({
