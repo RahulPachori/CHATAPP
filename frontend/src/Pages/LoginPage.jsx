@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import AuthImagePatern from "../Components/AuthImagePatern";
+import GoogleAuthButton from "../Components/GoogleAuthButton";
 import { Link } from "react-router-dom";
 import {
   Eye,
@@ -142,6 +143,9 @@ const LoginPage = () => {
               )}
             </button>
           </form>
+
+          <div className="divider my-6">OR</div>
+          <GoogleAuthButton />
 
           {/* FOOTER */}
           <div className="divider my-7"></div>

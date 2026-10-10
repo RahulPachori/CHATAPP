@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import {
   User,
@@ -11,7 +11,9 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import AuthImagePattern from "../Components/AuthImagePatern";
+import GoogleAuthButton from "../Components/GoogleAuthButton";
 import { toast } from "react-hot-toast";
+import { axiosInstance } from "../lib/axios";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,7 +22,32 @@ const SignUpPage = () => {
     fullName: "",
     email: "",
     password: "",
+    otp: "",
   });
+  const [otpSent, setOtpSent] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cooldown]);
+
+  const handleSendOtp = async () => {
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) return toast.error("Enter a valid email first");
+    setSendingOtp(true);
+    try {
+      await axiosInstance.post("/auth/send-otp", { email: formData.email });
+      setOtpSent(true);
+      setCooldown(60);
+      toast.success("Verification code sent to your email");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Could not send code");
+    } finally {
+      setSendingOtp(false);
+    }
+  };
 
   const { signup, isSigningUp } = useAuthStore();
 
@@ -39,6 +66,11 @@ const SignUpPage = () => {
 
     if (formData.password.length < 6)
       return toast.error("Password must be at least 6 characters");
+
+    if (!otpSent) return toast.error("Verify your email: click Send Code");
+
+    if (!/^\d{6}$/.test(formData.otp))
+      return toast.error("Enter the 6-digit code from your email");
 
     return true;
   };
@@ -126,9 +158,39 @@ const SignUpPage = () => {
                       email: e.target.value,
                     })
                   }
+                  disabled={otpSent && cooldown > 0}
                 />
               </div>
+
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                disabled={sendingOtp || cooldown > 0}
+                className="btn btn-outline btn-sm rounded-xl mt-2"
+              >
+                {sendingOtp ? "Sending..." : cooldown > 0 ? `Resend in ${cooldown}s` : otpSent ? "Resend Code" : "Send Code"}
+              </button>
             </div>
+
+            {/* OTP */}
+            {otpSent && (
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text font-medium">Verification Code</span>
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  placeholder="6-digit code"
+                  className="input input-bordered rounded-xl w-full tracking-widest"
+                  value={formData.otp}
+                  onChange={(e) =>
+                    setFormData({ ...formData, otp: e.target.value.replace(/\D/g, "") })
+                  }
+                />
+              </div>
+            )}
 
             {/* PASSWORD */}
             <div className="form-control">
@@ -184,6 +246,9 @@ const SignUpPage = () => {
               )}
             </button>
           </form>
+
+          <div className="divider my-6">OR</div>
+          <GoogleAuthButton text="signup_with" />
 
           {/* FOOTER */}
           <div className="divider my-7"></div>

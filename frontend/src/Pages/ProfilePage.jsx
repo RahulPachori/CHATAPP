@@ -95,6 +95,9 @@ const ProfilePage = () => {
                   <p className="font-semibold text-base">
                     {authUser?.fullName}
                   </p>
+                  {authUser?.username && (
+                    <p className="text-sm text-base-content/60">@{authUser.username}</p>
+                  )}
 
                 </div>
 
