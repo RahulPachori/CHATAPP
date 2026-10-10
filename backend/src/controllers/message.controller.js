@@ -7,7 +7,7 @@ import {io,getReceiverSocketId} from "../lib/socket.js";
 export const getUsersForSidebar = async (req, res) => {
    try {
       const logedInUserId = req.user._id;
-      const filteredusers = await User.find({ _id: { $ne: logedInUserId } }).select("-password");
+      const filteredusers = await User.find({ _id: { $ne: logedInUserId } }).select("-password -encryptedPrivateKey");
       return res.status(200).json(filteredusers);
    } catch (error) {
       console.log("Error in getUsersForSidebar controller:", error.message);
@@ -31,12 +31,17 @@ export const getMessages = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
    try {
-      const { text, image } = req.body;
+      const { text, image, iv, senderKey, receiverKey } = req.body;
       const { id: receiverId } = req.params;
       const senderId = req.user._id;
 
       if (!text && !image) {
          return res.status(400).json({ message: "Message cannot be empty" });
+      }
+
+      // text must arrive already encrypted by the sender's browser
+      if (text && (!iv || !senderKey || !receiverKey)) {
+         return res.status(400).json({ message: "Message must be encrypted" });
       }
 
       let imageUrl = null;
@@ -50,6 +55,9 @@ export const sendMessage = async (req, res) => {
          senderId,
          receiverId,
          text,
+         iv,
+         senderKey,
+         receiverKey,
          image: imageUrl
       });
 

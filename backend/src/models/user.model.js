@@ -6,6 +6,14 @@ const userSchema = new mongoose.Schema({
       required: true,
       unique: true
    },
+   // Unique handle chosen by the user the first time they sign in with Google
+   username:{
+      type: String,
+      unique: true,
+      sparse: true,
+      lowercase: true,
+      trim: true
+   },
    fullName:{
       type: String,
       required: true
@@ -16,6 +24,20 @@ const userSchema = new mongoose.Schema({
       minlength: 6
    },
    profilePic:{
+      type: String,
+      default:""
+   },
+   // End-to-end encryption: public key is shared, private key is stored only in a password-locked form
+   // false for accounts created with Google until the user sets a password
+   hasPassword:{
+      type: Boolean,
+      default: true
+   },
+   publicKey:{
+      type: String,
+      default:""
+   },
+   encryptedPrivateKey:{
       type: String,
       default:""
    }
